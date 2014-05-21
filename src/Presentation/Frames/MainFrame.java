@@ -6,17 +6,26 @@
 
 package Presentation.Frames;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
+
 /**
  *
  * @author Niels
  */
 public class MainFrame extends javax.swing.JFrame {
-
+    TimeSheetOverview tsow;
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
+        tsow = new TimeSheetOverview();
         initComponents();
+        this.setSize(1300, 800);
+        this.setLayout(new BorderLayout());
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.add(tsow, BorderLayout.CENTER);
     }
 
     /**
@@ -79,6 +88,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
