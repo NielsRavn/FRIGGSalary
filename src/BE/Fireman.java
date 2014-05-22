@@ -96,4 +96,7 @@ public class Fireman {
         this.driver = driver;
     }
     
+    public String toString(){
+        return this.firstName + " " + this.lastName;
+    }
 }
