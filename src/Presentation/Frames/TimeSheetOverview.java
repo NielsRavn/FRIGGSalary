@@ -63,20 +63,37 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount() == 1)
                 {
-                     populateTableWithTimeSheets((Fireman)jLFiremanList.getSelectedValue(), 0);
-                     
+                     populateTableWithTimeSheets(((Fireman)jLFiremanList.getSelectedValue()).getUserId());
+                     txtSearchEmployId.setText(""+((Fireman)jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
                  }
              }
 });
     }
     
-    private void populateTableWithTimeSheets(Fireman fireman, int id)
+    private void populateTableWithTimeSheets(int id)
     {
         
         try {
-            if (id == 0)id = fireman.getUserId();
-            
             ArrayList<TimeSheet> ts = tsa.getTimeSheetByFiremanId(id);
+            model.clearList();
+            for(TimeSheet a : ts)
+            {
+                model.addTimeSheet(a);
+            }
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Der er problemer med databasen " + ex);
+        }
+         jttimesheettable.setModel(model);
+         validate();
+         repaint();
+    }
+    
+    private void populateTableWithTimeSheetsFromSearchQery(int id, int month, int year)
+    {
+        
+        try {
+            ArrayList<TimeSheet> ts = tsa.getTimeSheetByFiremanIdMonthYear(id, month, year);
             model.clearList();
             for(TimeSheet a : ts)
             {
@@ -301,21 +318,29 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private void jbtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtSearchActionPerformed
        
        
-       try { 
-         int id = Integer.parseInt(txtSearchEmployId.getText());
+      
+         int id = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
+         int year = testInputFromTxtBoxWithAlert(txtYear.getText(), "Det indtastet årstal er ikke et nummer");
+         int month = jcbMonth.getSelectedIndex()+1;
          
-         populateTableWithTimeSheets(null, id);
-         
-         
+         populateTableWithTimeSheetsFromSearchQery(id, month, year);
          jttimesheettable.setModel(model);
          validate();
          repaint();
-        } catch(NumberFormatException e) { 
-            JOptionPane.showMessageDialog(this, "Det indtastet medarbejds nr. er ikke et tal");
-        }
         
     }//GEN-LAST:event_jbtSearchActionPerformed
 
+    private int testInputFromTxtBoxWithAlert(String input, String AlertMessage)
+    {
+        int id=0;
+         try { 
+         id = Integer.parseInt(input);
+        return id;
+        } catch(NumberFormatException e) { 
+            JOptionPane.showMessageDialog(this, AlertMessage);
+            return id;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbxShowApproved;

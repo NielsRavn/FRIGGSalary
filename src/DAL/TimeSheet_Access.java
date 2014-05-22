@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
@@ -84,6 +85,82 @@ public class TimeSheet_Access  extends DatabaseConnection{
         
         
         return timesheets;
+    }
+
+    public ArrayList<TimeSheet> getTimeSheetByFiremanIdMonthYear(int id, int month, int year) throws SQLServerException, SQLException {
+        
+        Connection con = null;
+        ArrayList<TimeSheet> timesheets = new ArrayList<>();
+       try
+       {
+           con = getConnection();
+           Statement query = con.createStatement();
+           ResultSet result = query.executeQuery("SELECT * FROM TimeSheet " +
+                                                                "INNER JOIN ApprovalSheet " +
+                                                                "ON TimeSheet.acceptedForSalary = ApprovalSheet.id " +
+                                                                "WHERE empoyeeId = "+id+" " +
+                                                                "AND DATEPART(month, startTime) = "+month+"" +
+                                                                "AND DATEPART(YEAR, startTime) = "+year+" ;");
+           while(result.next())
+           {
+               int timeSheetId = result.getInt("id");
+               int employeeId = result.getInt("empoyeeId");
+               int alarmId = result.getInt("alarmId");
+               int carNr = result.getInt("carNr"); 
+               Position pos = pa.getPositionById(result.getInt("positionId"));
+               Timestamp startTime = result.getTimestamp("startTime");
+               
+               getYearFromTimestamp(startTime);
+               getMonthFromTimestamp(startTime);
+               if (getYearFromTimestamp(startTime) == year && getMonthFromTimestamp(startTime) == month ) {
+                   System.out.println("Yes");
+               }
+               Timestamp endtime = result.getTimestamp("endTime");
+               int acceptedByTeamleader = result.getInt("acceptedByTeamLeader");
+               int acceptedForSalary = result.getInt("acceptedForSalary");
+               boolean addedToPayment = result.getBoolean("addedToPayment");
+               String comment = result.getString("comment");
+               
+               //Approval Sheet 
+               int appId = result.getInt("id");
+               int firemanId = result.getInt("firemanID");
+               String appcoment = result.getString("comment");
+               boolean approved = result.getBoolean("approved");
+               int hours = result.getInt("hours");
+               
+               ApprovalSheet aps = new ApprovalSheet(appId, firemanId, appcoment, approved, hours);
+               
+               TimeSheet c = new TimeSheet(timeSheetId, employeeId, alarmId, carNr, pos, startTime, endtime, 
+                                                         acceptedByTeamleader, acceptedForSalary, addedToPayment, comment, aps);
+               timesheets.add(c);
+           }
+       }
+       finally
+       {
+           if(con != null)
+           {
+               con.close();
+           }
+       }
+        
+        
+        return timesheets;
+    }
+    
+    private int getYearFromTimestamp(Timestamp tms)
+    {
+        long time = tms.getTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+        return cal.get(Calendar.YEAR);    
+    }
+    
+     private int getMonthFromTimestamp(Timestamp tms)
+    {
+        long time = tms.getTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+        return cal.get(Calendar.MONTH);    
     }
     
 }
