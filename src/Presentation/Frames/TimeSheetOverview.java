@@ -51,7 +51,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         initComponents();
         populateFiremanList();
         //Populates the months in dropdown
-        jcbMonth.setModel(new DefaultComboBoxModel(new String[] { "Januar", "Februar", "Marts", 
+        jcbMonth.setModel(new DefaultComboBoxModel(new String[] { "","Januar", "Februar", "Marts", 
                                                                                              "April", "Maj", "Juni", "Juli", 
                                                                                              "August", "September", "Oktober", 
                                                                                              "November", "December" }));
@@ -63,6 +63,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount() == 1)
                 {
+                    cbxShowApproved.setSelected(false);
                      populateTableWithTimeSheets(((Fireman)jLFiremanList.getSelectedValue()).getUserId());
                      txtSearchEmployId.setText(""+((Fireman)jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
                  }
@@ -89,11 +90,11 @@ public class TimeSheetOverview extends javax.swing.JPanel {
          repaint();
     }
     
-    private void populateTableWithTimeSheetsFromSearchQery(int id, int month, int year)
+    private void populateTableWithTimeSheetsFromSearchQery(int id, int month, int year, boolean getApproved)
     {
         
         try {
-            ArrayList<TimeSheet> ts = tsa.getTimeSheetByFiremanIdMonthYear(id, month, year);
+            ArrayList<TimeSheet> ts = tsa.getTimeSheetByFiremanIdMonthYear(id, month, year, getApproved);
             model.clearList();
             for(TimeSheet a : ts)
             {
@@ -149,6 +150,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         txtYear = new javax.swing.JTextField();
 
+        jLFiremanList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jSFiremanScrollpane.setViewportView(jLFiremanList);
 
         lblFiremen.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
@@ -321,9 +323,9 @@ public class TimeSheetOverview extends javax.swing.JPanel {
       
          int id = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
          int year = testInputFromTxtBoxWithAlert(txtYear.getText(), "Det indtastet årstal er ikke et nummer");
-         int month = jcbMonth.getSelectedIndex()+1;
-         
-         populateTableWithTimeSheetsFromSearchQery(id, month, year);
+         int month = jcbMonth.getSelectedIndex();
+         boolean getApproved = cbxShowApproved.isSelected();
+         populateTableWithTimeSheetsFromSearchQery(id, month, year, getApproved);
          jttimesheettable.setModel(model);
          validate();
          repaint();
@@ -333,13 +335,14 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private int testInputFromTxtBoxWithAlert(String input, String AlertMessage)
     {
         int id=0;
-         try { 
+          try { 
          id = Integer.parseInt(input);
         return id;
         } catch(NumberFormatException e) { 
             JOptionPane.showMessageDialog(this, AlertMessage);
             return id;
         }
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

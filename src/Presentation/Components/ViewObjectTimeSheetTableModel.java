@@ -140,6 +140,7 @@ Calendar date = Calendar.getInstance();
     
     public void clearList(){
         vos.clear();
+        fireTableDataChanged();
     }
      
 }

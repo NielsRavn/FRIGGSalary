@@ -36,7 +36,7 @@ public class Fireman_Access extends DatabaseConnection  {
            con = getConnection();
            
            Statement query = con.createStatement();
-           ResultSet result = query.executeQuery("SELECT * FROM Fireman;");
+           ResultSet result = query.executeQuery("SELECT * FROM Fireman ORDER BY firstName;");
            while(result.next())
            {
                int userId = result.getInt("employeeId");

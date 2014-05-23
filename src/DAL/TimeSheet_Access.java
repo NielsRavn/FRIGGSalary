@@ -87,10 +87,18 @@ public class TimeSheet_Access  extends DatabaseConnection{
         return timesheets;
     }
 
-    public ArrayList<TimeSheet> getTimeSheetByFiremanIdMonthYear(int id, int month, int year) throws SQLServerException, SQLException {
+    public ArrayList<TimeSheet> getTimeSheetByFiremanIdMonthYear(int id, int month, int year, boolean getApproved) throws SQLServerException, SQLException {
         
         Connection con = null;
+        String approvedQuery = " AND addedToPayment = 'False' ";
+        String monthQuery = " AND DATEPART(month, startTime) = "+month+"  ";
         ArrayList<TimeSheet> timesheets = new ArrayList<>();
+        if (getApproved) {
+            approvedQuery = " AND addedToPayment = 'True' ";
+        }
+        if (month==0) {
+            monthQuery = "";
+        }
        try
        {
            con = getConnection();
@@ -99,8 +107,9 @@ public class TimeSheet_Access  extends DatabaseConnection{
                                                                 "INNER JOIN ApprovalSheet " +
                                                                 "ON TimeSheet.acceptedForSalary = ApprovalSheet.id " +
                                                                 "WHERE empoyeeId = "+id+" " +
-                                                                "AND DATEPART(month, startTime) = "+month+"" +
-                                                                "AND DATEPART(YEAR, startTime) = "+year+" ;");
+                                                                monthQuery +
+                                                                "AND DATEPART(YEAR, startTime) = "+year+" " +
+                                                                ""+approvedQuery+" ;");
            while(result.next())
            {
                int timeSheetId = result.getInt("id");
