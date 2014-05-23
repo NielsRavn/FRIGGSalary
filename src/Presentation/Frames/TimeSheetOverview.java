@@ -149,6 +149,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtYear = new javax.swing.JTextField();
+        jbPrintPDF = new javax.swing.JButton();
 
         jLFiremanList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jSFiremanScrollpane.setViewportView(jLFiremanList);
@@ -235,6 +236,8 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             }
         });
 
+        jbPrintPDF.setText("Print til pdf");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -258,7 +261,9 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(437, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 354, Short.MAX_VALUE)
+                .addComponent(jbPrintPDF)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -268,7 +273,8 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(txtSearchEmployId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbxShowApproved)
-                    .addComponent(jbtSearch))
+                    .addComponent(jbtSearch)
+                    .addComponent(jbPrintPDF))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jcbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -320,9 +326,13 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private void jbtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtSearchActionPerformed
        
        
-      
+      int year = 0;
          int id = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
-         int year = testInputFromTxtBoxWithAlert(txtYear.getText(), "Det indtastet årstal er ikke et nummer");
+         if (!txtYear.getText().equals("")) {
+             year = testInputFromTxtBoxWithAlert(txtYear.getText(), "Det indtastet årstal er ikke et nummer");
+        }
+             
+         
          int month = jcbMonth.getSelectedIndex();
          boolean getApproved = cbxShowApproved.isSelected();
          populateTableWithTimeSheetsFromSearchQery(id, month, year, getApproved);
@@ -355,6 +365,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private javax.swing.JPanel jPtableholder;
     private javax.swing.JScrollPane jSFiremanScrollpane;
     private javax.swing.JScrollPane jStable;
+    private javax.swing.JButton jbPrintPDF;
     private javax.swing.JButton jbtSearch;
     private javax.swing.JComboBox jcbMonth;
     private javax.swing.JPanel jpFiremanPanel;

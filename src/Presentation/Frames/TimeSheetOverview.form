@@ -180,7 +180,9 @@
                           <Component id="txtYear" min="-2" pref="93" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="437" max="32767" attributes="0"/>
+                  <EmptySpace pref="354" max="32767" attributes="0"/>
+                  <Component id="jbPrintPDF" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -193,6 +195,7 @@
                       <Component id="txtSearchEmployId" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxShowApproved" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbtSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbPrintPDF" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -275,6 +278,11 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtYearActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jbPrintPDF">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Print til pdf"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
