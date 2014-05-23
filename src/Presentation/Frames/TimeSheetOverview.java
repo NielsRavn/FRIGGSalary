@@ -10,9 +10,14 @@ import BE.Fireman;
 import BE.TimeSheet;
 import BLL.Fireman_AccessLink;
 import BLL.TimeSheet_AccessLink;
+import DAL.PdfCreater;
 import Presentation.Components.ViewObjectTimeSheetTableModel;
+import com.itextpdf.text.DocumentException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -49,6 +54,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Der er problemer med databasen");
         }
         initComponents();
+        jbPrintPDF.addActionListener(new MyActionlistener());
         populateFiremanList();
         //Populates the months in dropdown
         jcbMonth.setModel(new DefaultComboBoxModel(new String[] { "","Januar", "Februar", "Marts", 
@@ -374,4 +380,25 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private javax.swing.JTextField txtSearchEmployId;
     private javax.swing.JTextField txtYear;
     // End of variables declaration//GEN-END:variables
+
+    private class MyActionlistener implements ActionListener{
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == jbPrintPDF){
+                PdfCreater pdf = new PdfCreater(model);
+                try {
+                    pdf.createPdf(null);
+                    
+                } catch (DocumentException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        
+    }
 }
