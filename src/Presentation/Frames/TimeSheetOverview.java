@@ -12,6 +12,7 @@ import BLL.Pdf_AccesLink;
 import BLL.TimeSheet_AccessLink;
 import DAL.PdfCreater;
 import Presentation.Components.ViewObjectTimeSheetTableModel;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.DocumentException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -396,7 +397,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                 Pdf_AccesLink pdf = new Pdf_AccesLink(model);
                 try {
                     if(model.getRowCount() > 0)
-                        pdf.createPdf();
+                        pdf.createPdf(lblPdfFilePath.getText());
                     else
                         JOptionPane.showMessageDialog(TimeSheetOverview.this, "Du skal vælge en brandmand der har haft vagter i den pågældende periode for at kunne skrive til et dokument.");
 
@@ -406,6 +407,8 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(TimeSheetOverview.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else if (e.getSource() == btnPdfFilePath) {
                 JFileChooser fc = new JFileChooser();

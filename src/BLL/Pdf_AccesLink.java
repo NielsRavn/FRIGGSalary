@@ -11,6 +11,7 @@ import Presentation.Components.ViewObjectTimeSheetTableModel;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.DocumentException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  *
@@ -22,9 +23,9 @@ public class Pdf_AccesLink {
         this.model = model;
     }
     
-    public void createPdf() throws DocumentException, BadElementException, IOException{
+    public void createPdf(String filePath) throws DocumentException, BadElementException, IOException, SQLException{
         PdfCreater pdf = new PdfCreater(model);
-        pdf.createPdf(null);
+        pdf.createPdf(filePath);
     }
     
 }

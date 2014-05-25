@@ -47,8 +47,7 @@ import java.util.Calendar;
 public class PdfCreater {
     private static final BaseColor COLOR_BLUE = new CMYKColor(255, 255, 0, 0);
     private ViewObjectTimeSheetTableModel model;
-    private String filePath = "c:/temp/";
-    private String fileName = "FirstPdf.pdf";
+    private String fileName;
     private final PdfPCell emptyCell = new PdfPCell();
     
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
@@ -68,8 +67,7 @@ public class PdfCreater {
 
     public void createPdf(String filePath) throws DocumentException, FileNotFoundException, BadElementException, IOException, SQLException {
          
-        this.filePath = filePath;
-        filePath = "c:/temp/";
+        
         Calendar date = Calendar.getInstance();
         String dato;
         dato = ""+date.get(Calendar.YEAR)+"-"+MyUtil.p0(date.get(Calendar.MONTH)+1)+"-"+MyUtil.p0((date.get(Calendar.DAY_OF_MONTH)))+"-";
