@@ -28,4 +28,8 @@ public class Fireman_AccessLink {
         return fa.getAllFiremen();
     }
     
+    public Fireman getFiremanById(int ID) throws SQLException{
+        return fa.getFiremanByID(ID);
+    }
+    
 }
