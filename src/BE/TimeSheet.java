@@ -25,6 +25,7 @@ public class TimeSheet {
     private int acceptedForSalary;
     private boolean addedToPayment;
     private ApprovalSheet approvedSheetacceptedForSalary;
+    private boolean exercise;
     
     public TimeSheet(   int timeSheetId, 
                                 int employeeId, 
@@ -37,7 +38,9 @@ public class TimeSheet {
                                 int acceptedForSalary, 
                                 boolean addedToPayment, 
                                 String comment,
-                                ApprovalSheet approvedSheetacceptedForSalary) {
+                                ApprovalSheet approvedSheetacceptedForSalary,
+                                boolean exercise
+                                ) {
       this.timeSheetId = timeSheetId;
       this.employeeId = employeeId;
       this.alarmId = alarmId;
@@ -49,6 +52,7 @@ public class TimeSheet {
       this.acceptedForSalary = acceptedForSalary;
       this.addedToPayment = addedToPayment;
       this.approvedSheetacceptedForSalary = approvedSheetacceptedForSalary;
+      this.exercise = exercise;
     }
 
 
@@ -205,5 +209,19 @@ public class TimeSheet {
      */
     public void setapprovedacceptedForSalary(ApprovalSheet approvedacceptedForSalary) {
         this.approvedSheetacceptedForSalary = approvedacceptedForSalary;
+    }
+
+    /**
+     * @return the exercise
+     */
+    public boolean isExercise() {
+        return exercise;
+    }
+
+    /**
+     * @param exercise the exercise to set
+     */
+    public void setExercise(boolean exercise) {
+        this.exercise = exercise;
     }
 }

@@ -41,11 +41,13 @@ public class TimeSheet_Access  extends DatabaseConnection{
        {
            con = getConnection();
            Statement query = con.createStatement();
-           ResultSet result = query.executeQuery("SELECT * FROM TimeSheet " +
-                                                                "INNER JOIN " +
-                                                                "ApprovalSheet " +
-                                                                "ON TimeSheet.acceptedForSalary = ApprovalSheet.id " +
-                                                                "WHERE empoyeeId = "+ id +" ;");
+           ResultSet result = query.executeQuery("SELECT Alarm.exercise AS exercise,* FROM TimeSheet " +
+                                                                " INNER JOIN " +
+                                                                " ApprovalSheet " +
+                                                                " ON TimeSheet.acceptedForSalary = ApprovalSheet.id " +
+                                                                " INNER JOIN Alarm " +
+                                                                " ON TimeSheet.alarmId = Alarm.id " +
+                                                                " WHERE empoyeeId = "+ id +" ;");
            while(result.next())
            {
               
@@ -60,6 +62,7 @@ public class TimeSheet_Access  extends DatabaseConnection{
                int acceptedForSalary = result.getInt("acceptedForSalary");
                boolean addedToPayment = result.getBoolean("addedToPayment");
                String comment = result.getString("comment");
+               boolean exercise = result.getBoolean("exercise");
                
                //Approval Sheet 
                int appId = result.getInt("id");
@@ -71,7 +74,7 @@ public class TimeSheet_Access  extends DatabaseConnection{
                ApprovalSheet aps = new ApprovalSheet(appId, firemanId, appcoment, approved, hours);
                
                TimeSheet c = new TimeSheet(timeSheetId, employeeId, alarmId, carNr, pos, startTime, endtime, 
-                                                         acceptedByTeamleader, acceptedForSalary, addedToPayment, comment, aps);
+                                                         acceptedByTeamleader, acceptedForSalary, addedToPayment, comment, aps, exercise);
                timesheets.add(c);
            }
        }
@@ -87,11 +90,12 @@ public class TimeSheet_Access  extends DatabaseConnection{
         return timesheets;
     }
 
-    public ArrayList<TimeSheet> getTimeSheetByFiremanIdMonthYear(int id, int month, int year, boolean getApproved) throws SQLServerException, SQLException {
+    public ArrayList<TimeSheet> getTimeSheetByFiremanIdMonthYearAproved(int id, int month, int year, boolean getApproved) throws SQLServerException, SQLException {
         
         Connection con = null;
         String approvedQuery = " AND addedToPayment = 'False' ";
         String monthQuery = " AND DATEPART(month, startTime) = "+month+"  ";
+        String yearQuery = " AND DATEPART(YEAR, startTime) = "+year+" ";
         ArrayList<TimeSheet> timesheets = new ArrayList<>();
         if (getApproved) {
             approvedQuery = " AND addedToPayment = 'True' ";
@@ -99,16 +103,21 @@ public class TimeSheet_Access  extends DatabaseConnection{
         if (month==0) {
             monthQuery = "";
         }
+        if (year==0) {
+            yearQuery = "";
+        }
        try
        {
            con = getConnection();
            Statement query = con.createStatement();
-           ResultSet result = query.executeQuery("SELECT * FROM TimeSheet " +
-                                                                "INNER JOIN ApprovalSheet " +
-                                                                "ON TimeSheet.acceptedForSalary = ApprovalSheet.id " +
-                                                                "WHERE empoyeeId = "+id+" " +
+           ResultSet result = query.executeQuery("SELECT Alarm.exercise AS exercise, * FROM TimeSheet " +
+                                                                " INNER JOIN ApprovalSheet " +
+                                                                " ON TimeSheet.acceptedForSalary = ApprovalSheet.id " +
+                                                                " INNER JOIN Alarm " +
+                                                                " ON TimeSheet.alarmId = Alarm.id " +
+                                                                " WHERE empoyeeId = "+id+" " +
                                                                 monthQuery +
-                                                                "AND DATEPART(YEAR, startTime) = "+year+" " +
+                                                                yearQuery +
                                                                 ""+approvedQuery+" ;");
            while(result.next())
            {
@@ -129,6 +138,7 @@ public class TimeSheet_Access  extends DatabaseConnection{
                int acceptedForSalary = result.getInt("acceptedForSalary");
                boolean addedToPayment = result.getBoolean("addedToPayment");
                String comment = result.getString("comment");
+               boolean exercise = result.getBoolean("exercise");
                
                //Approval Sheet 
                int appId = result.getInt("id");
@@ -140,7 +150,7 @@ public class TimeSheet_Access  extends DatabaseConnection{
                ApprovalSheet aps = new ApprovalSheet(appId, firemanId, appcoment, approved, hours);
                
                TimeSheet c = new TimeSheet(timeSheetId, employeeId, alarmId, carNr, pos, startTime, endtime, 
-                                                         acceptedByTeamleader, acceptedForSalary, addedToPayment, comment, aps);
+                                                         acceptedByTeamleader, acceptedForSalary, addedToPayment, comment, aps, exercise);
                timesheets.add(c);
            }
        }

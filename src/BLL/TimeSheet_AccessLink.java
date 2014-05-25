@@ -31,7 +31,7 @@ public class TimeSheet_AccessLink {
 
     public ArrayList<TimeSheet> getTimeSheetByFiremanIdMonthYear(int id, int month, int year, boolean getApproved) throws SQLException {
         
-        return tsa.getTimeSheetByFiremanIdMonthYear(id, month, year, getApproved);
+        return tsa.getTimeSheetByFiremanIdMonthYearAproved(id, month, year, getApproved);
     }
 
   

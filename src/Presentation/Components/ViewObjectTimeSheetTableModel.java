@@ -20,10 +20,10 @@ import javax.swing.table.AbstractTableModel;
 private ArrayList<TimeSheet> vos;
 Calendar date = Calendar.getInstance();
     // The names of columns
-    private String[] colNames = {"Dato" , "Start", "Slut", "Timer", "Position"};
+    private String[] colNames = {"Dato" , "Start", "Slut", "Timer", "Position", "Øvelse"};
     // The type of columns
     private Class[] classes = {
-        String.class, String.class , String.class, String.class, String.class};
+        String.class, String.class , String.class, String.class, String.class, boolean.class};
    
     /**
      * Creates a new ViewObjectTableModel
@@ -78,7 +78,9 @@ Calendar date = Calendar.getInstance();
             case 3:
                 return " "+vo.getacceptedForSalary().getHours();
             case 4:
-                return ""+vo.getPos().getName();                
+                return ""+vo.getPos().getName();
+            case 5:
+                return vo.isExercise();
         }
 
         return null;
