@@ -6,10 +6,9 @@
 package DAL;
 
 import BE.TimeSheet;
+import BLL.Fireman_AccessLink;
+import BLL.MyUtil;
 import Presentation.Components.ViewObjectTimeSheetTableModel;
-import java.io.FileOutputStream;
-import java.util.Date;
-
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -19,30 +18,39 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.List;
 import com.itextpdf.text.ListItem;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Section;
+import com.itextpdf.text.pdf.CMYKColor;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import java.awt.Color;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.Calendar;
 
 /**
  *
  * @author Brobak
  */
 public class PdfCreater {
-
+    private static final BaseColor COLOR_BLUE = new CMYKColor(255, 255, 0, 0);
     private ViewObjectTimeSheetTableModel model;
-    private String file = "c:/temp/FirstPdf.pdf";
+    private String filePath = "c:/temp/";
+    private String fileName = "FirstPdf.pdf";
+    private final PdfPCell emptyCell = new PdfPCell();
+    
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
             Font.BOLD);
     private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
@@ -51,18 +59,26 @@ public class PdfCreater {
             Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
             Font.BOLD);
-    
-    public PdfCreater(ViewObjectTimeSheetTableModel model){
+    private Fireman_AccessLink fal;
+    public PdfCreater(ViewObjectTimeSheetTableModel model) throws IOException{
+        emptyCell.setBorderColor(BaseColor.WHITE);
+        fal = new Fireman_AccessLink();
         this.model = model;
     }
 
-    public void createPdf(String filePath) throws DocumentException, FileNotFoundException, BadElementException, IOException {
+    public void createPdf(String filePath) throws DocumentException, FileNotFoundException, BadElementException, IOException, SQLException {
          
-        file = filePath;
-        file = "c:/temp/FirstPdf.pdf";
+        this.filePath = filePath;
+        filePath = "c:/temp/";
+        Calendar date = Calendar.getInstance();
+        String dato;
+        dato = ""+date.get(Calendar.YEAR)+"-"+MyUtil.p0(date.get(Calendar.MONTH)+1)+"-"+MyUtil.p0((date.get(Calendar.DAY_OF_MONTH)))+"-";
+        
+        String name = fal.getFiremanById(model.getTimeSheet(0).getEmployeeId()).getFirstName() +" "+ fal.getFiremanById(model.getTimeSheet(0).getEmployeeId()).getLastName();
+        fileName = dato + name + ".pdf";
         
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(file));
+        PdfWriter.getInstance(document, new FileOutputStream(filePath+fileName));
         document.open();
         //addMetaData(document);
         //addTitlePage(document);
@@ -84,36 +100,86 @@ public class PdfCreater {
 
  
 
-    private void addContent(Document document) throws DocumentException, BadElementException, IOException {
+    private void addContent(Document document) throws DocumentException, BadElementException, IOException, SQLException {
         Anchor anchor = new Anchor("First Chapter", catFont);
         anchor.setName("First Chapter");
         
+        
+        
+        
+        
+        Paragraph spacing = new Paragraph("");
+        addEmptyLine(spacing, 1);
+        
+        // Second parameter is the number of the chapter
+        Chapter catPart = new Chapter(1);
+        addHeader(catPart);
+        catPart.add(spacing);
+        
+        addEmployeeInfo(catPart);
+        catPart.add(spacing);
+
+        createMainTable(catPart);
+        catPart.add(spacing);
+        
+        createTotalHoursTable(catPart);
+        catPart.add(spacing);
+        Calendar date = Calendar.getInstance();
+        String dato;
+        dato = (date.get(Calendar.DAY_OF_MONTH))+"/"+(date.get(Calendar.MONTH)+1)+"-"+date.get(Calendar.YEAR)+" " + MyUtil.p0(date.get(Calendar.HOUR_OF_DAY)) + ":" + MyUtil.p0(date.get(Calendar.MINUTE));
+        Paragraph printedInfo = new Paragraph("Printet "+ dato);
+        printedInfo.setAlignment(Element.ALIGN_CENTER);
+        catPart.add(printedInfo);
+        
+        document.add(catPart);
+
+    }
+    
+    private void addEmployeeInfo(Section catPart) throws SQLException, IOException{
+        PdfPTable employee = new PdfPTable(1);
+        
+        Paragraph empId = new Paragraph("Medarbejdernummer: "+model.getTimeSheet(0).getEmployeeId());
+        PdfPCell empIdCell = new PdfPCell(empId);
+        empIdCell.setBorderColor(BaseColor.WHITE);
+        String name = fal.getFiremanById(model.getTimeSheet(0).getEmployeeId()).getFirstName() +" "+ fal.getFiremanById(model.getTimeSheet(0).getEmployeeId()).getLastName();
+        Paragraph empName = new Paragraph("Navn: " + name);
+        PdfPCell empNameCell = new PdfPCell(empName);
+        empNameCell.setBorderColor(BaseColor.WHITE);
+        
+        employee.setHeaderRows(0);
+        employee.addCell(empIdCell);
+        employee.addCell(empNameCell);
+        employee.setWidthPercentage(80.0f);
+        
+        catPart.add(employee);
+    }
+    
+    private void addHeader(Section catPart) throws BadElementException, IOException{
         PdfPTable header = new PdfPTable(1);
         PdfPCell c = new PdfPCell(Image.getInstance("res/brandogredninglogo.png"));
-        c.setBackgroundColor(BaseColor.BLUE);
+        c.setBackgroundColor(COLOR_BLUE);
         //c.setBorderColor(BaseColor.RED);
         header.setHeaderRows(0);
         header.addCell(c);
         header.setWidthPercentage(100.0f);
         
-
-        // Second parameter is the number of the chapter
-        Chapter catPart = new Chapter(1);
         catPart.add(header);
+    }
+    
+    private void createTotalHoursTable(Section catPart) throws DocumentException{
+        int totalHours = 0;
+        for(int row = 0; row < model.getRowCount(); row++){
+            totalHours += model.getTimeSheet(row).getacceptedForSalary().getHours();
+        }
         
-        
-        
-        
-        Section subCatPart = catPart.addSection(new Paragraph("Hello", subFont));
-        Paragraph stars = new Paragraph(20);
-        addEmptyLine(stars, 2);
-        
-        subCatPart.add(stars);
-
-        createMainTable(subCatPart);
-
-        document.add(catPart);
-
+        Paragraph hours = new Paragraph("Timer i alt: " + totalHours);
+        PdfPCell hoursCell = new PdfPCell(hours);
+        hoursCell.setBorderColor(BaseColor.WHITE);
+        PdfPTable tblHours = new PdfPTable(2);
+        tblHours.setWidths(new float[]{2,1});
+        tblHours.addCell(emptyCell);
+        tblHours.addCell(hoursCell);
+        catPart.add(tblHours);
     }
 
     private void createMainTable(Section subCatPart)
@@ -137,7 +203,10 @@ public class PdfCreater {
 
         for(int row = 0; row < model.getRowCount(); row++){
             for (int col = 0; col < model.getColumnCount(); col++) {
-                table.addCell(model.getValueAt(row, col).toString());
+                
+                PdfPCell cell = new PdfPCell(new Phrase(model.getValueAt(row, col).toString()));
+                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                table.addCell(cell);
                 
             }
         }

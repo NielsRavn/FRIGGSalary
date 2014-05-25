@@ -61,4 +61,39 @@ public class Fireman_Access extends DatabaseConnection  {
         return fireman;
     }
     
+    public Fireman getFiremanByID(int ID) throws SQLException {
+        Connection con = null;
+        Fireman fireman = null;
+        
+               try
+       {
+           con = getConnection();
+           
+           Statement query = con.createStatement();
+           ResultSet result = query.executeQuery("SELECT * FROM Fireman WHERE employeeId = " + ID + ";");
+           if(result.next())
+           {
+               int userId = result.getInt("employeeId");
+               String firstName = result.getString("firstName");
+               String lastName = result.getString("lastName");
+               boolean teamleader = result.getBoolean("teamleader");
+               boolean driver = result.getBoolean("driver");
+               
+               
+               fireman = new Fireman(userId, firstName, lastName, teamleader, driver);
+               
+           }
+           
+       }
+       finally
+       {
+           if(con != null)
+           {
+               con.close();
+           }
+       }
+        return fireman;
+           
+    }
+    
 }
