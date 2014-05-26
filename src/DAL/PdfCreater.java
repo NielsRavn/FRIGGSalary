@@ -201,9 +201,13 @@ public class PdfCreater {
 
         for(int row = 0; row < model.getRowCount(); row++){
             for (int col = 0; col < model.getColumnCount(); col++) {
-                
-                PdfPCell cell = new PdfPCell(new Phrase(model.getValueAt(row, col).toString()));
-                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                String input = model.getValueAt(row, col).toString();
+                if(input.equals("true"))
+                    input = "X";
+                if(input.equals("false"))
+                    input = "";
+                PdfPCell cell = new PdfPCell(new Phrase(input));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
                 
             }
