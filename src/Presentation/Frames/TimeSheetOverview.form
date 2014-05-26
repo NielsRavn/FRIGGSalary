@@ -180,12 +180,8 @@
                           <Component id="txtYear" min="-2" pref="93" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="348" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lblPdfFilePath" max="32767" attributes="0"/>
-                      <Component id="jbPrintPDF" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnPdfFilePath" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+                  <EmptySpace pref="354" max="32767" attributes="0"/>
+                  <Component id="jbPrintPDF" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -199,11 +195,8 @@
                       <Component id="txtSearchEmployId" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxShowApproved" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbtSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnPdfFilePath" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="lblPdfFilePath" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jcbMonth" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -289,20 +282,6 @@
         <Component class="javax.swing.JButton" name="jbPrintPDF">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print til pdf"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblPdfFilePath">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="C:\u005cTemp\u005c" containsInvalidXMLChars="true"/>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[60, 14]"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnPdfFilePath">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="V&#xe6;lg mappe"/>
           </Properties>
         </Component>
       </SubComponents>
