@@ -23,7 +23,7 @@ Calendar date = Calendar.getInstance();
     private String[] colNames = {"Dato" , "Start", "Slut", "Timer", "Position", "Øvelse"};
     // The type of columns
     private Class[] classes = {
-        String.class, String.class , String.class, String.class, String.class, boolean.class};
+        String.class, String.class , String.class, String.class, String.class, String.class};
    
     /**
      * Creates a new ViewObjectTableModel
@@ -80,7 +80,10 @@ Calendar date = Calendar.getInstance();
             case 4:
                 return ""+vo.getPos().getName();
             case 5:
-                return vo.isExercise();
+                if (vo.isExercise()) {
+                    return "X";
+                }
+                return "";
         }
 
         return null;
