@@ -31,6 +31,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -67,16 +69,21 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         //Gets the current year 
         txtYear.setText("" + Calendar.getInstance().get(Calendar.YEAR));
 
-        jLFiremanList.addMouseListener(new MouseAdapter() {
+        jLFiremanList.addListSelectionListener(new ListSelectionListener() {
+
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
-                    cbxShowApproved.setSelected(false);
-                    populateTableWithTimeSheets(((Fireman) jLFiremanList.getSelectedValue()).getUserId());
-                    txtSearchEmployId.setText("" + ((Fireman) jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
-                }
+            public void valueChanged(ListSelectionEvent e) {
+                updateTableOnListSelection();
             }
         });
+
+        
+    }
+
+    private void updateTableOnListSelection() {
+        cbxShowApproved.setSelected(false);
+        populateTableWithTimeSheets(((Fireman) jLFiremanList.getSelectedValue()).getUserId());
+        txtSearchEmployId.setText("" + ((Fireman) jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
     }
 
     private void populateTableWithTimeSheets(int id) {
@@ -382,13 +389,14 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                 String filePath = "";
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 if (fc.showSaveDialog(TimeSheetOverview.this) == JFileChooser.APPROVE_OPTION) {
-                    filePath = (fc.getSelectedFile().getAbsolutePath() + "\\"); ;
+                    filePath = (fc.getSelectedFile().getAbsolutePath() + "\\");;
                 }
                 try {
-                    if(model.getRowCount() > 0)
+                    if (model.getRowCount() > 0) {
                         pdf.createPdf(filePath);
-                    else
+                    } else {
                         JOptionPane.showMessageDialog(TimeSheetOverview.this, "Du skal vælge en brandmand der har haft vagter i den pågældende periode for at kunne skrive til et dokument.");
+                    }
 
                 } catch (DocumentException ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -399,7 +407,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                     Logger.getLogger(TimeSheetOverview.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } 
+            }
         }
 
     }
