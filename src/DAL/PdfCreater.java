@@ -207,7 +207,7 @@ public class PdfCreater {
                 if(input.equals("false"))
                     input = "";
                 PdfPCell cell = new PdfPCell(new Phrase(input));
-                cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(cell);
                 
             }
