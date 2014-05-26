@@ -23,7 +23,7 @@ public class MainFrame extends javax.swing.JFrame {
         tsow = new TimeSheetOverview();
         initComponents();
         this.setTitle("FRIGG Løn");
-        this.setSize(1300, 800);
+        this.setSize(1100, 800);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.add(tsow, BorderLayout.CENTER);
