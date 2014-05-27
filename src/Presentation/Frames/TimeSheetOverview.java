@@ -46,7 +46,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     DefaultListModel firemenModel;
     ViewObjectTimeSheetTableModel model;
     Header header;
-
+    int year = 0;
     /**
      * Creates new form TimeSheetOverview
      */
@@ -78,39 +78,32 @@ public class TimeSheetOverview extends javax.swing.JPanel {
 
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                updateTableOnListSelection();
+                
+        txtSearchEmployId.setText("" + ((Fireman) jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
+                updateTableOnSelection();
             }
         });
 
     }
 
-    private void updateTableOnListSelection() {
-        cbxShowApproved.setSelected(false);
-        populateTableWithTimeSheets(((Fireman) jLFiremanList.getSelectedValue()).getUserId());
-        txtSearchEmployId.setText("" + ((Fireman) jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
+    private void updateTableOnSelection() {
+        populateTableWithTimeSheetsFromSearchQery();
     }
 
-    private void populateTableWithTimeSheets(int id) {
-
-        try {
-            ArrayList<TimeSheet> ts = tsa.getTimeSheetByFiremanId(id);
-            model.clearList();
-            for (TimeSheet a : ts) {
-                model.addTimeSheet(a);
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Der er problemer med databasen " + ex);
+    private void populateTableWithTimeSheetsFromSearchQery(){
+        
+         if (!txtYear.getText().equals("")) {
+            year = testInputFromTxtBoxWithAlert(txtYear.getText(), "Det indtastet årstal er ikke et nummer");
         }
-        jttimesheettable.setModel(model);
-        validate();
-        repaint();
-    }
-
-    private void populateTableWithTimeSheetsFromSearchQery(int id, int month, int year, boolean getApproved) {
-
+        
+         boolean getApproved = cbxShowApproved.isSelected(); 
+        
+         int firemanId = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
+         
+         int month = jcbMonth.getSelectedIndex();
+         
         try {
-            ArrayList<TimeSheet> ts = tsa.getTimeSheetByFiremanIdMonthYear(id, month, year, getApproved);
+            ArrayList<TimeSheet> ts = tsa.getTimeSheetByFiremanIdMonthYear(firemanId, month, year, getApproved);
             model.clearList();
             for (TimeSheet a : ts) {
                 model.addTimeSheet(a);
@@ -154,7 +147,6 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         txtSearchEmployId = new javax.swing.JTextField();
         cbxShowApproved = new javax.swing.JCheckBox();
-        jbtSearch = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jcbMonth = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
@@ -203,17 +195,12 @@ public class TimeSheetOverview extends javax.swing.JPanel {
 
         cbxShowApproved.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
         cbxShowApproved.setText("Vis godkendte");
-        jPanel3.add(cbxShowApproved);
-
-        jbtSearch.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-        jbtSearch.setText("Søg");
-        jbtSearch.setToolTipText("");
-        jbtSearch.addActionListener(new java.awt.event.ActionListener() {
+        cbxShowApproved.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtSearchActionPerformed(evt);
+                cbxShowApprovedActionPerformed(evt);
             }
         });
-        jPanel3.add(jbtSearch);
+        jPanel3.add(cbxShowApproved);
 
         jPanel1.add(jPanel3);
 
@@ -221,6 +208,11 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jcbMonth.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jcbMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbMonthActionPerformed(evt);
+            }
+        });
         jPanel4.add(jcbMonth);
 
         jLabel2.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
@@ -277,29 +269,23 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtSearchEmployIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchEmployIdActionPerformed
-        // TODO add your handling code here:
+      updateTableOnSelection();
     }//GEN-LAST:event_txtSearchEmployIdActionPerformed
 
     private void txtYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtYearActionPerformed
-        // TODO add your handling code here:
+      updateTableOnSelection();
     }//GEN-LAST:event_txtYearActionPerformed
+    
+    
+    private void jcbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbMonthActionPerformed
+        updateTableOnSelection();
+    }//GEN-LAST:event_jcbMonthActionPerformed
 
-    private void jbtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtSearchActionPerformed
-
-        int year = 0;
-        int id = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
-        if (!txtYear.getText().equals("")) {
-            year = testInputFromTxtBoxWithAlert(txtYear.getText(), "Det indtastet årstal er ikke et nummer");
-        }
-
-        int month = jcbMonth.getSelectedIndex();
-        boolean getApproved = cbxShowApproved.isSelected();
-        populateTableWithTimeSheetsFromSearchQery(id, month, year, getApproved);
-        jttimesheettable.setModel(model);
-        validate();
-        repaint();
-
-    }//GEN-LAST:event_jbtSearchActionPerformed
+    private void cbxShowApprovedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxShowApprovedActionPerformed
+        
+        
+        updateTableOnSelection();
+    }//GEN-LAST:event_cbxShowApprovedActionPerformed
 
     private int testInputFromTxtBoxWithAlert(String input, String AlertMessage) {
         int id = 0;
@@ -328,7 +314,6 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private javax.swing.JScrollPane jSFiremanScrollpane;
     private javax.swing.JScrollPane jStable;
     private javax.swing.JButton jbPrintPDF;
-    private javax.swing.JButton jbtSearch;
     private javax.swing.JComboBox jcbMonth;
     private javax.swing.JPanel jpFiremanPanel;
     private javax.swing.JTable jttimesheettable;

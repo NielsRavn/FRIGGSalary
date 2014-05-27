@@ -112,9 +112,6 @@ Calendar date = Calendar.getInstance();
 
     @Override
     public boolean isCellEditable(int row, int col) {
-        if(col == 5)
-        return true;
-        else
         return false;
     }
 
