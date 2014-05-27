@@ -31,6 +31,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -67,16 +69,20 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         //Gets the current year 
         txtYear.setText("" + Calendar.getInstance().get(Calendar.YEAR));
 
-        jLFiremanList.addMouseListener(new MouseAdapter() {
+        jLFiremanList.addListSelectionListener(new ListSelectionListener() {
+
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
-                    cbxShowApproved.setSelected(false);
-                    populateTableWithTimeSheets(((Fireman) jLFiremanList.getSelectedValue()).getUserId());
-                    txtSearchEmployId.setText("" + ((Fireman) jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
-                }
+            public void valueChanged(ListSelectionEvent e) {
+                updateTableOnListSelection();
             }
         });
+
+    }
+
+    private void updateTableOnListSelection() {
+        cbxShowApproved.setSelected(false);
+        populateTableWithTimeSheets(((Fireman) jLFiremanList.getSelectedValue()).getUserId());
+        txtSearchEmployId.setText("" + ((Fireman) jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
     }
 
     private void populateTableWithTimeSheets(int id) {
@@ -190,14 +196,14 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             jPtableholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPtableholderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jStable)
-                .addContainerGap())
+                .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 787, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         jPtableholderLayout.setVerticalGroup(
             jPtableholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPtableholderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jStable, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE))
+                .addComponent(jStable))
         );
 
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
@@ -261,7 +267,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 354, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 280, Short.MAX_VALUE)
                 .addComponent(jbPrintPDF)
                 .addContainerGap())
         );
@@ -294,22 +300,22 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPtableholder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
+                        .addComponent(jPtableholder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(56, 56, 56)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPtableholder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPtableholder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jpFiremanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -382,24 +388,26 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                 String filePath = "";
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 if (fc.showSaveDialog(TimeSheetOverview.this) == JFileChooser.APPROVE_OPTION) {
-                    filePath = (fc.getSelectedFile().getAbsolutePath() + "\\"); ;
-                }
-                try {
-                    if(model.getRowCount() > 0)
-                        pdf.createPdf(filePath);
-                    else
-                        JOptionPane.showMessageDialog(TimeSheetOverview.this, "Du skal vælge en brandmand der har haft vagter i den pågældende periode for at kunne skrive til et dokument.");
+                    filePath = (fc.getSelectedFile().getAbsolutePath() + "\\");;
+                    try {
+                        if (model.getRowCount() > 0) {
+                            pdf.createPdf(filePath);
+                        } else {
+                            JOptionPane.showMessageDialog(TimeSheetOverview.this, "Du skal vælge en brandmand der har haft vagter i den pågældende periode for at kunne skrive til et dokument.");
+                        }
 
-                } catch (DocumentException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(TimeSheetOverview.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (DocumentException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(TimeSheetOverview.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-            } 
+
+            }
         }
 
     }
