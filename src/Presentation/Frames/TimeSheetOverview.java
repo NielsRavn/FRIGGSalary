@@ -14,6 +14,7 @@ import DAL.PdfCreater;
 import Presentation.Components.ViewObjectTimeSheetTableModel;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.DocumentException;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -44,6 +45,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     TimeSheet_AccessLink tsa;
     DefaultListModel firemenModel;
     ViewObjectTimeSheetTableModel model;
+    Header header;
 
     /**
      * Creates new form TimeSheetOverview
@@ -51,14 +53,17 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     public TimeSheetOverview() {
         firemenModel = new DefaultListModel();
         model = new ViewObjectTimeSheetTableModel();
-
+        header = new Header();
+       
         try {
             fal = new Fireman_AccessLink();
             tsa = new TimeSheet_AccessLink();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Der er problemer med databasen");
         }
+       
         initComponents();
+         this.add(header, BorderLayout.NORTH);
         jbPrintPDF.addActionListener(new MyActionlistener());
         populateFiremanList();
         //Populates the months in dropdown
@@ -144,47 +149,107 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         jSFiremanScrollpane = new javax.swing.JScrollPane();
         jLFiremanList = new javax.swing.JList();
         lblFiremen = new javax.swing.JLabel();
-        jPtableholder = new javax.swing.JPanel();
-        jStable = new javax.swing.JScrollPane();
-        jttimesheettable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtSearchEmployId = new javax.swing.JTextField();
         cbxShowApproved = new javax.swing.JCheckBox();
         jbtSearch = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
         jcbMonth = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtYear = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         jbPrintPDF = new javax.swing.JButton();
+        jPtableholder = new javax.swing.JPanel();
+        jStable = new javax.swing.JScrollPane();
+        jttimesheettable = new javax.swing.JTable();
+
+        setLayout(new java.awt.BorderLayout());
+
+        jpFiremanPanel.setPreferredSize(new java.awt.Dimension(180, 800));
+        jpFiremanPanel.setLayout(new java.awt.BorderLayout());
 
         jLFiremanList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jSFiremanScrollpane.setViewportView(jLFiremanList);
 
+        jpFiremanPanel.add(jSFiremanScrollpane, java.awt.BorderLayout.CENTER);
+
         lblFiremen.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
         lblFiremen.setText("Brandmænd");
+        jpFiremanPanel.add(lblFiremen, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout jpFiremanPanelLayout = new javax.swing.GroupLayout(jpFiremanPanel);
-        jpFiremanPanel.setLayout(jpFiremanPanelLayout);
-        jpFiremanPanelLayout.setHorizontalGroup(
-            jpFiremanPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpFiremanPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jpFiremanPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSFiremanScrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jpFiremanPanelLayout.createSequentialGroup()
-                        .addComponent(lblFiremen)
-                        .addGap(0, 95, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jpFiremanPanelLayout.setVerticalGroup(
-            jpFiremanPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpFiremanPanelLayout.createSequentialGroup()
-                .addGap(0, 11, Short.MAX_VALUE)
-                .addComponent(lblFiremen)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSFiremanScrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        add(jpFiremanPanel, java.awt.BorderLayout.WEST);
+
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(1282, 100));
+        jPanel1.setLayout(new java.awt.GridLayout(0, 1));
+
+        jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jLabel1.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jLabel1.setText("Medarbejder nr.");
+        jPanel3.add(jLabel1);
+
+        txtSearchEmployId.setPreferredSize(new java.awt.Dimension(80, 30));
+        txtSearchEmployId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchEmployIdActionPerformed(evt);
+            }
+        });
+        jPanel3.add(txtSearchEmployId);
+
+        cbxShowApproved.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        cbxShowApproved.setText("Vis godkendte");
+        jPanel3.add(cbxShowApproved);
+
+        jbtSearch.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jbtSearch.setText("Søg");
+        jbtSearch.setToolTipText("");
+        jbtSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtSearchActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jbtSearch);
+
+        jPanel1.add(jPanel3);
+
+        jPanel4.setPreferredSize(new java.awt.Dimension(476, 50));
+        jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jcbMonth.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jPanel4.add(jcbMonth);
+
+        jLabel2.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jLabel2.setText("Månede");
+        jPanel4.add(jLabel2);
+
+        jLabel3.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jLabel3.setText("År");
+        jPanel4.add(jLabel3);
+
+        txtYear.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        txtYear.setPreferredSize(new java.awt.Dimension(80, 21));
+        txtYear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtYearActionPerformed(evt);
+            }
+        });
+        jPanel4.add(txtYear);
+
+        jLabel4.setPreferredSize(new java.awt.Dimension(100, 10));
+        jPanel4.add(jLabel4);
+
+        jbPrintPDF.setText("Print til pdf");
+        jPanel4.add(jbPrintPDF);
+
+        jPanel1.add(jPanel4);
+
+        jPanel2.add(jPanel1, java.awt.BorderLayout.NORTH);
 
         jStable.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
 
@@ -197,129 +262,19 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             jPtableholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPtableholderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 787, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 916, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPtableholderLayout.setVerticalGroup(
             jPtableholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPtableholderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jStable))
+                .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE))
         );
 
-        jLabel1.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-        jLabel1.setText("Medarbejder nr.");
+        jPanel2.add(jPtableholder, java.awt.BorderLayout.CENTER);
 
-        txtSearchEmployId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSearchEmployIdActionPerformed(evt);
-            }
-        });
-
-        cbxShowApproved.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-        cbxShowApproved.setText("Vis godkendte");
-
-        jbtSearch.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-        jbtSearch.setText("Søg");
-        jbtSearch.setToolTipText("");
-        jbtSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtSearchActionPerformed(evt);
-            }
-        });
-
-        jcbMonth.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-
-        jLabel2.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-        jLabel2.setText("Månede");
-
-        jLabel3.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-        jLabel3.setText("År");
-
-        txtYear.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
-        txtYear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtYearActionPerformed(evt);
-            }
-        });
-
-        jbPrintPDF.setText("Print til pdf");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtSearchEmployId, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cbxShowApproved)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbtSearch))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 280, Short.MAX_VALUE)
-                .addComponent(jbPrintPDF)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtSearchEmployId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxShowApproved)
-                    .addComponent(jbtSearch))
-                .addGap(38, 38, 38)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbPrintPDF))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jpFiremanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPtableholder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPtableholder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jpFiremanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
+        add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtSearchEmployIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchEmployIdActionPerformed
@@ -365,7 +320,11 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPtableholder;
     private javax.swing.JScrollPane jSFiremanScrollpane;
     private javax.swing.JScrollPane jStable;
