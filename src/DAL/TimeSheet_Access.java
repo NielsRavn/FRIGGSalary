@@ -47,7 +47,8 @@ public class TimeSheet_Access  extends DatabaseConnection{
                                                                 " ON TimeSheet.acceptedForSalary = ApprovalSheet.id " +
                                                                 " INNER JOIN Alarm " +
                                                                 " ON TimeSheet.alarmId = Alarm.id " +
-                                                                " WHERE empoyeeId = "+ id +" ;");
+                                                                " WHERE empoyeeId = "+ id +" "+  
+                                                                " ORDER BY startTime;");
            while(result.next())
            {
               
@@ -118,7 +119,8 @@ public class TimeSheet_Access  extends DatabaseConnection{
                                                                 " WHERE empoyeeId = "+id+" " +
                                                                 monthQuery +
                                                                 yearQuery +
-                                                                ""+approvedQuery+" ;");
+                                                                ""+approvedQuery+""+  
+                                                                " ORDER BY startTime ;");
            while(result.next())
            {
                int timeSheetId = result.getInt("id");
