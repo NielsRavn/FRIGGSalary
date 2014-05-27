@@ -82,7 +82,6 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             }
         });
 
-        
     }
 
     private void updateTableOnListSelection() {
@@ -349,23 +348,24 @@ public class TimeSheetOverview extends javax.swing.JPanel {
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 if (fc.showSaveDialog(TimeSheetOverview.this) == JFileChooser.APPROVE_OPTION) {
                     filePath = (fc.getSelectedFile().getAbsolutePath() + "\\");;
-                }
-                try {
-                    if (model.getRowCount() > 0) {
-                        pdf.createPdf(filePath);
-                    } else {
-                        JOptionPane.showMessageDialog(TimeSheetOverview.this, "Du skal vælge en brandmand der har haft vagter i den pågældende periode for at kunne skrive til et dokument.");
-                    }
+                    try {
+                        if (model.getRowCount() > 0) {
+                            pdf.createPdf(filePath);
+                        } else {
+                            JOptionPane.showMessageDialog(TimeSheetOverview.this, "Du skal vælge en brandmand der har haft vagter i den pågældende periode for at kunne skrive til et dokument.");
+                        }
 
-                } catch (DocumentException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(TimeSheetOverview.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (DocumentException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(TimeSheetOverview.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+
             }
         }
 
