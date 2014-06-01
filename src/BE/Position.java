@@ -13,7 +13,11 @@ package BE;
 public class Position{
 private int ID;
 private String name;
-
+/**
+ * 
+ * @param ID
+ * @param name 
+ */
 public Position (int ID, String name) {
     this.ID = ID;
     this.name = name;

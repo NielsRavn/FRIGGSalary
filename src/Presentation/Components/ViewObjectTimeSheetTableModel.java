@@ -88,7 +88,11 @@ Calendar date = Calendar.getInstance();
 
         return null;
     }
-    
+    /**
+     * retuns the timesheet of the row selected
+     * @param row
+     * @return 
+     */
     public TimeSheet getTimeSheet(int row)
     {
         return vos.get(row);
@@ -133,13 +137,19 @@ Calendar date = Calendar.getInstance();
     public TimeSheet getViewObjectByRow(int row) {
         return vos.get(row);
     }
-    
+    /**
+     * add the timesheet to the table and fire a tabledatachanged
+     * @param timesheet 
+     */
     public void addTimeSheet(TimeSheet timesheet)
     {
         vos.add(timesheet);
         fireTableDataChanged();
     }
     
+    /**
+     * clears the table and update the table
+     */
     public void clearList(){
         vos.clear();
         fireTableDataChanged();

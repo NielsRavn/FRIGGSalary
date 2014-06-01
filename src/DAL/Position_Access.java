@@ -23,7 +23,13 @@ public class Position_Access extends DatabaseConnection{
     public Position_Access() throws IOException{
         super();
     }
-    
+    /**
+     * Returns the position name and id from an id
+     * @param id
+     * @return
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public Position getPositionById(int id) throws SQLServerException, SQLException{
         Connection con = null;
         Position position = null;

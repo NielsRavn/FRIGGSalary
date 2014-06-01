@@ -80,16 +80,15 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 
         txtSearchEmployId.setText("" + ((Fireman) jLFiremanList.getSelectedValue()).getUserId());//set the search field to current selected worker id
-                updateTableOnSelection();
+                populateTableWithTimeSheetsFromSearchQery();
             }
         });
 
     }
-
-    private void updateTableOnSelection() {
-        populateTableWithTimeSheetsFromSearchQery();
-    }
-
+    
+    /**
+     * This methode populates the data and checks if there is any search query
+     */
     private void populateTableWithTimeSheetsFromSearchQery(){
         
          if (!txtYear.getText().equals("")) {
@@ -116,7 +115,10 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         validate();
         repaint();
     }
-
+    
+    /**
+     * Sets the list of firemen
+     */
     private void populateFiremanList() {
         try {
             ArrayList<Fireman> fireman = fal.getAllFiremen();
@@ -267,26 +269,42 @@ public class TimeSheetOverview extends javax.swing.JPanel {
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * if a workid is entert, this will trigger the search method
+     * @param evt 
+     */
     private void txtSearchEmployIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchEmployIdActionPerformed
-      updateTableOnSelection();
+      populateTableWithTimeSheetsFromSearchQery();
     }//GEN-LAST:event_txtSearchEmployIdActionPerformed
-
+    /**
+     * if the year is changed, then the table will update
+     * @param evt 
+     */
     private void txtYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtYearActionPerformed
-      updateTableOnSelection();
+      populateTableWithTimeSheetsFromSearchQery();
     }//GEN-LAST:event_txtYearActionPerformed
     
-    
+    /**
+     * If the month is changed, then the table will update
+     * @param evt 
+     */
     private void jcbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbMonthActionPerformed
-        updateTableOnSelection();
+        populateTableWithTimeSheetsFromSearchQery();
     }//GEN-LAST:event_jcbMonthActionPerformed
-
+    /**
+     * if a check is set in the show aproved timesheets checkbox, then the table will update
+     * @param evt 
+     */
     private void cbxShowApprovedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxShowApprovedActionPerformed
-        
-        
-        updateTableOnSelection();
+        populateTableWithTimeSheetsFromSearchQery();
     }//GEN-LAST:event_cbxShowApprovedActionPerformed
-
+    
+    /**
+     * This test the input if it is an integer, and retruns an allert message
+     * @param input
+     * @param AlertMessage
+     * @return 
+     */
     private int testInputFromTxtBoxWithAlert(String input, String AlertMessage) {
         int id = 0;
         try {

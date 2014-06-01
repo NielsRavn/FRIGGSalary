@@ -21,12 +21,21 @@ import java.util.ArrayList;
  */
 public class Fireman_Access extends DatabaseConnection  {
 
-    
+    /**
+     * 
+     * @throws IOException 
+     */
     public Fireman_Access() throws IOException
     {
         super();
     }
     
+    /**
+     * Returns an arraylist of all firemen 
+     * @return
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public ArrayList<Fireman> getAllFiremen() throws SQLServerException, SQLException {
         Connection con = null;
          ArrayList<Fireman> fireman = new ArrayList<>();
@@ -61,6 +70,12 @@ public class Fireman_Access extends DatabaseConnection  {
         return fireman;
     }
     
+    /**
+     * Returns a Fireman by an id
+     * @param ID
+     * @return
+     * @throws SQLException 
+     */
     public Fireman getFiremanByID(int ID) throws SQLException {
         Connection con = null;
         Fireman fireman = null;

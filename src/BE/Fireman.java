@@ -18,6 +18,14 @@ public class Fireman {
     private boolean teamleader;
     private boolean driver;
     
+    /**
+     * 
+     * @param userId
+     * @param firstName
+     * @param lastName
+     * @param teamleader
+     * @param driver 
+     */
     public Fireman(int userId, String firstName, String lastName, boolean teamleader, boolean driver) {
         this.userId = userId;
         this.firstName = firstName;

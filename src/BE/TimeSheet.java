@@ -27,6 +27,22 @@ public class TimeSheet {
     private ApprovalSheet approvedSheetacceptedForSalary;
     private boolean exercise;
     
+    /**
+     * 
+     * @param timeSheetId
+     * @param employeeId
+     * @param alarmId
+     * @param carNr
+     * @param pos
+     * @param startTime
+     * @param endtime
+     * @param acceptedByTeamleader
+     * @param acceptedForSalary
+     * @param addedToPayment
+     * @param comment
+     * @param approvedSheetacceptedForSalary
+     * @param exercise 
+     */
     public TimeSheet(   int timeSheetId, 
                                 int employeeId, 
                                 int alarmId, 

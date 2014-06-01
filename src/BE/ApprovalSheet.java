@@ -18,6 +18,14 @@ public class ApprovalSheet {
     private boolean approved;
     private int hours;
     
+    /**
+     * 
+     * @param appId
+     * @param firemanId
+     * @param appcoment
+     * @param approved
+     * @param hours 
+     */
     public ApprovalSheet(int appId, int firemanId, String appcoment, boolean approved, int hours) {
         this.appId = appId;
         this.firemanId = firemanId;

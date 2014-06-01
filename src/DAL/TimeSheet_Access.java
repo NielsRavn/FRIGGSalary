@@ -27,13 +27,23 @@ import java.util.Calendar;
 public class TimeSheet_Access  extends DatabaseConnection{
     
     Position_Access pa;
-    
+    /**
+     * 
+     * @throws IOException 
+     */
     public TimeSheet_Access() throws IOException
     {
         super();
         pa = new Position_Access();
     }
     
+    /**
+     * Returns an arraylist of timesheets based on the fireman id
+     * @param id
+     * @return
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public ArrayList<TimeSheet> getTimeSheetByFiremanId(int id) throws SQLServerException, SQLException {
         Connection con = null;
         ArrayList<TimeSheet> timesheets = new ArrayList<>();
@@ -90,7 +100,16 @@ public class TimeSheet_Access  extends DatabaseConnection{
         
         return timesheets;
     }
-
+    /**
+     * Returns an arraylist of timesheets based on a search query on month day and year and not approved
+     * @param id
+     * @param month
+     * @param year
+     * @param getApproved
+     * @return
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public ArrayList<TimeSheet> getTimeSheetByFiremanIdMonthYearAproved(int id, int month, int year, boolean getApproved) throws SQLServerException, SQLException {
         
         Connection con = null;
@@ -167,7 +186,11 @@ public class TimeSheet_Access  extends DatabaseConnection{
         
         return timesheets;
     }
-    
+    /**
+     * Internal metode returns the year as a n int from a timestamp
+     * @param tms
+     * @return 
+     */
     private int getYearFromTimestamp(Timestamp tms)
     {
         long time = tms.getTime();
@@ -176,6 +199,11 @@ public class TimeSheet_Access  extends DatabaseConnection{
         return cal.get(Calendar.YEAR);    
     }
     
+    /**
+     * Internal metode returns the month as an int from a timestamp
+     * @param tms
+     * @return 
+     */
      private int getMonthFromTimestamp(Timestamp tms)
     {
         long time = tms.getTime();
