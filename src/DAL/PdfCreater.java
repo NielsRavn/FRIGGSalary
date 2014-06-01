@@ -46,28 +46,35 @@ import java.util.Calendar;
  */
 public class PdfCreater {
     private static final BaseColor COLOR_BLUE = new CMYKColor(255, 255, 0, 0);
-    private ViewObjectTimeSheetTableModel model;
+    private final ViewObjectTimeSheetTableModel model;
     private String fileName;
     private final PdfPCell emptyCell = new PdfPCell();
     
-    private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
+    private static final Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
             Font.BOLD);
-    private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
+    private static final Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
             Font.NORMAL, BaseColor.RED);
-    private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+    private static final Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
             Font.BOLD);
-    private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
+    private static final Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
             Font.BOLD);
-    private Fireman_AccessLink fal;
+    private final Fireman_AccessLink fal;
     public PdfCreater(ViewObjectTimeSheetTableModel model) throws IOException{
         emptyCell.setBorderColor(BaseColor.WHITE);
         fal = new Fireman_AccessLink();
         this.model = model;
     }
 
+    /**
+     * Creates a new pdf document based on the given ViewObjectTimeSheetTableModel
+     * @param filePath the path you want to write the pdf document to.
+     * @throws DocumentException
+     * @throws FileNotFoundException
+     * @throws BadElementException
+     * @throws IOException
+     * @throws SQLException 
+     */
     public void createPdf(String filePath) throws DocumentException, FileNotFoundException, BadElementException, IOException, SQLException {
-         
-        
         Calendar date = Calendar.getInstance();
         String dato;
         dato = ""+date.get(Calendar.YEAR)+"-"+MyUtil.p0(date.get(Calendar.MONTH)+1)+"-"+MyUtil.p0((date.get(Calendar.DAY_OF_MONTH)))+"-";
@@ -78,34 +85,24 @@ public class PdfCreater {
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(filePath+fileName));
         document.open();
-        //addMetaData(document);
-        //addTitlePage(document);
         addContent(document);
         document.close();
 
     }
 
-    // iText allows to add metadata to the PDF which can be viewed in your Adobe
-    // Reader
-    // under File -> Properties
-    private void addMetaData(Document document) {
-        document.addTitle("My first PDF");
-        document.addSubject("Using iText");
-        document.addKeywords("Java, PDF, iText");
-        document.addAuthor("Lars Vogel");
-        document.addCreator("Lars Vogel");
-    }
 
  
-
+    /**
+     * Creates content for the pdf document
+     * @param document the pdf document you want to add the content to
+     * @throws DocumentException
+     * @throws BadElementException
+     * @throws IOException
+     * @throws SQLException 
+     */
     private void addContent(Document document) throws DocumentException, BadElementException, IOException, SQLException {
         Anchor anchor = new Anchor("First Chapter", catFont);
         anchor.setName("First Chapter");
-        
-        
-        
-        
-        
         Paragraph spacing = new Paragraph("");
         addEmptyLine(spacing, 1);
         
@@ -133,6 +130,12 @@ public class PdfCreater {
 
     }
     
+    /**
+     * Adds content about an employee
+     * @param catPart the section you want to add the content to
+     * @throws SQLException
+     * @throws IOException 
+     */
     private void addEmployeeInfo(Section catPart) throws SQLException, IOException{
         PdfPTable employee = new PdfPTable(1);
         
@@ -152,6 +155,12 @@ public class PdfCreater {
         catPart.add(employee);
     }
     
+    /**
+     * Adds the header to a section
+     * @param catPart the section you want to add the header to
+     * @throws BadElementException
+     * @throws IOException 
+     */
     private void addHeader(Section catPart) throws BadElementException, IOException{
         PdfPTable header = new PdfPTable(1);
         PdfPCell c = new PdfPCell(Image.getInstance("res/brandogredninglogo.png"));
@@ -164,6 +173,11 @@ public class PdfCreater {
         catPart.add(header);
     }
     
+    /**
+     * Adds total hours
+     * @param catPartthe section you want to add the total hours to
+     * @throws DocumentException 
+     */
     private void createTotalHoursTable(Section catPart) throws DocumentException{
         int totalHours = 0;
         for(int row = 0; row < model.getRowCount(); row++){
@@ -180,16 +194,19 @@ public class PdfCreater {
         catPart.add(tblHours);
     }
 
+    /**
+     * Adds a table with time sheets
+     * @param subCatPart the section you want to add the table to
+     * @throws BadElementException
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
     private void createMainTable(Section subCatPart)
             throws BadElementException, MalformedURLException, IOException {
         
         
         PdfPTable table = new PdfPTable(model.getColumnCount());
         table.setWidthPercentage(100.0f);
-        // t.setBorderColor(BaseColor.GRAY);
-        // t.setPadding(4);
-        // t.setSpacing(4);
-        // t.setBorderWidth(1);
         
         PdfPCell c1;
         for(int i = 0; i < model.getColumnCount(); i++){
@@ -212,28 +229,15 @@ public class PdfCreater {
                 
             }
         }
-       
-        //setBackgroundColor(BaseColor.BLUE);
-        
-        //image.setAbsolutePosition(100f, 650f);
-        //subCatPart.add(image);
-
         subCatPart.add(table);
-        
-        
-        
-        
-
     }
 
-    private static void createList(Section subCatPart) {
-        List list = new List(true, false, 10);
-        list.add(new ListItem("First point"));
-        list.add(new ListItem("Second point"));
-        list.add(new ListItem("Third point"));
-        subCatPart.add(list);
-    }
 
+    /**
+     * Adds an empty number of lines to a given paragraph
+     * @param paragraph the paragraph you want to add empty lines to 
+     * @param number the number of empty lines you want
+     */
     private static void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" "));
