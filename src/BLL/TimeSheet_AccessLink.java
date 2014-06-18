@@ -37,6 +37,20 @@ public class TimeSheet_AccessLink {
         
         return tsa.getTimeSheetByFiremanIdMonthYearAproved(id, month, year, getApproved);
     }
+    
+    /**
+     * Returns an arraylist of timesheets by the parameters given
+     * @param id
+     * @param month
+     * @param year
+     * @param getApproved
+     * @return
+     * @throws SQLException 
+     */
+    public int getNumberOfUnapprovedTimeSheetByFiremanIdMonthYear(int id, int month, int year, boolean getApproved) throws SQLException {
+        
+        return tsa.getNumberOfUnapprovedTimeSheetByFiremanIdMonthYear(id, month, year, getApproved);
+    }
 
   
     

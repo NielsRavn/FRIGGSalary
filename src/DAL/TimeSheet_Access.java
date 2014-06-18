@@ -186,6 +186,59 @@ public class TimeSheet_Access  extends DatabaseConnection{
         
         return timesheets;
     }
+    
+    /**
+     * Returns an arraylist of timesheets based on a search query on month day and year and not approved
+     * @param id
+     * @param month
+     * @param year
+     * @param getApproved
+     * @return
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
+    public int getNumberOfUnapprovedTimeSheetByFiremanIdMonthYear(int id, int month, int year, boolean getApproved) throws SQLServerException, SQLException {
+        
+        Connection con = null;
+        String approvedQuery = " AND addedToPayment = 'False' ";
+        String monthQuery = " AND DATEPART(month, startTime) = "+month+"  ";
+        String yearQuery = " AND DATEPART(YEAR, startTime) = "+year+" ";
+        ArrayList<TimeSheet> timesheets = new ArrayList<>();
+        int res = 0;
+        if (getApproved) {
+            approvedQuery = " AND addedToPayment = 'True' ";
+        }
+        if (month==0) {
+            monthQuery = "";
+        }
+        if (year==0) {
+            yearQuery = "";
+        }
+       try
+       {
+           con = getConnection();
+           Statement query = con.createStatement();
+           ResultSet result = query.executeQuery("SELECT * FROM TimeSheet  WHERE empoyeeId = id " +
+                                                    "monthQuery " +
+                                                    "yearQuery " +
+                                                    approvedQuery + ";");
+           
+           while(result.next())
+           {
+               res++;
+           }
+       }
+       finally
+       {
+           if(con != null)
+           {
+               con.close();
+           }
+       }
+        
+        
+        return res;
+    }
     /**
      * Internal metode returns the year as a n int from a timestamp
      * @param tms

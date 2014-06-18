@@ -114,6 +114,35 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         jttimesheettable.setModel(model);
         validate();
         repaint();
+        
+        
+    }
+    
+    private void findUnapprovedTimesheets(){
+        int numberOfUnapprovedTimesheets = 0;
+        if (!txtYear.getText().equals("")) {
+            year = testInputFromTxtBoxWithAlert(txtYear.getText(), "Det indtastet årstal er ikke et nummer");
+        }
+        
+         boolean getApproved = cbxShowApproved.isSelected(); 
+        
+         int firemanId = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
+         
+         int month = jcbMonth.getSelectedIndex();
+         
+         try {
+            numberOfUnapprovedTimesheets = tsa.getNumberOfUnapprovedTimeSheetByFiremanIdMonthYear(firemanId, month, year, getApproved);
+            
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Der er problemer med databasen " + ex);
+        }
+        if(numberOfUnapprovedTimesheets != 0){
+            lblUnapproved.setText(firemanId + " har " + numberOfUnapprovedTimesheets + " køresedler der mangler at blive godkendt i den valgte periode.");
+        }else{
+            lblUnapproved.setText("");
+        }
+         
     }
     
     /**
@@ -159,6 +188,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         jPtableholder = new javax.swing.JPanel();
         jStable = new javax.swing.JScrollPane();
         jttimesheettable = new javax.swing.JTable();
+        lblUnapproved = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -255,14 +285,18 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             jPtableholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPtableholderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 916, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPtableholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblUnapproved, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 916, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         jPtableholderLayout.setVerticalGroup(
             jPtableholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPtableholderLayout.createSequentialGroup()
+            .addGroup(jPtableholderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE))
+                .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 964, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblUnapproved, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
         );
 
         jPanel2.add(jPtableholder, java.awt.BorderLayout.CENTER);
@@ -336,6 +370,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
     private javax.swing.JPanel jpFiremanPanel;
     private javax.swing.JTable jttimesheettable;
     private javax.swing.JLabel lblFiremen;
+    private javax.swing.JLabel lblUnapproved;
     private javax.swing.JTextField txtSearchEmployId;
     private javax.swing.JTextField txtYear;
     // End of variables declaration//GEN-END:variables
