@@ -218,11 +218,11 @@ public class TimeSheet_Access  extends DatabaseConnection{
        {
            con = getConnection();
            Statement query = con.createStatement();
-           ResultSet result = query.executeQuery("SELECT * FROM TimeSheet  WHERE empoyeeId = id " +
-                                                    "monthQuery " +
-                                                    "yearQuery " +
-                                                    approvedQuery + ";");
-           
+           ResultSet result = query.executeQuery("SELECT * FROM TimeSheet  WHERE empoyeeId ="  + id  +
+                                                    monthQuery  +
+                                                    yearQuery  +
+                                                    approvedQuery + 
+                                                    "AND acceptedForSalary IS NULL;");
            while(result.next())
            {
                res++;

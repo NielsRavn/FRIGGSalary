@@ -15,6 +15,7 @@ import Presentation.Components.ViewObjectTimeSheetTableModel;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.DocumentException;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -63,6 +64,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         }
        
         initComponents();
+        lblUnapproved.setForeground(Color.red);
          this.add(header, BorderLayout.NORTH);
         jbPrintPDF.addActionListener(new MyActionlistener());
         populateFiremanList();
@@ -115,7 +117,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         validate();
         repaint();
         
-        
+        findUnapprovedTimesheets();
     }
     
     private void findUnapprovedTimesheets(){
@@ -125,22 +127,31 @@ public class TimeSheetOverview extends javax.swing.JPanel {
         }
         
          boolean getApproved = cbxShowApproved.isSelected(); 
-        
-         int firemanId = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
+        Fireman fireman = null;
+        int firemanId = testInputFromTxtBoxWithAlert(txtSearchEmployId.getText(), "Det indtastet medarbejds nr. er ikke et nummer");
+        try {
+            fireman = fal.getFiremanById(firemanId);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Der er problemer med databasen " + ex);
+        }
          
-         int month = jcbMonth.getSelectedIndex();
-         
-         try {
-            numberOfUnapprovedTimesheets = tsa.getNumberOfUnapprovedTimeSheetByFiremanIdMonthYear(firemanId, month, year, getApproved);
+        int month = jcbMonth.getSelectedIndex();
+
+        try {
+           numberOfUnapprovedTimesheets = tsa.getNumberOfUnapprovedTimeSheetByFiremanIdMonthYear(firemanId, month, year, getApproved);
             
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Der er problemer med databasen " + ex);
         }
         if(numberOfUnapprovedTimesheets != 0){
-            lblUnapproved.setText(firemanId + " har " + numberOfUnapprovedTimesheets + " køresedler der mangler at blive godkendt i den valgte periode.");
+            lblUnapproved.setText("Advarsel: " +fireman.getFirstName() + " " + fireman.getLastName() +" har " + numberOfUnapprovedTimesheets + " køresedler der mangler at blive godkendt i den valgte periode.");
+            validate();
+            repaint();
         }else{
             lblUnapproved.setText("");
+            validate();
+            repaint();
         }
          
     }
@@ -293,7 +304,7 @@ public class TimeSheetOverview extends javax.swing.JPanel {
             .addGroup(jPtableholderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jStable, javax.swing.GroupLayout.PREFERRED_SIZE, 964, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         jPanel2.add(jPtableholder, java.awt.BorderLayout.CENTER);
